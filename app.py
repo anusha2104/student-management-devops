@@ -9,7 +9,7 @@ students = [
 
 @app.route("/")
 def home():
-    return "Student Management System is Running!"
+    return "Student Management System is Running!🚀"
 
 @app.route("/students")
 def get_students():
