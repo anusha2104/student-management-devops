@@ -45,7 +45,7 @@ pipeline {
                     bat '''
                     icacls "%SSH_KEY%" /inheritance:r
                     icacls "%SSH_KEY%" /remove:g "BUILTIN\\Users"
-                    icacls "%SSH_KEY%" /grant:r "%USERNAME%:R"
+                    icacls "%SSH_KEY%" /grant:r "SYSTEM:R"
                     
                     ssh -i "%SSH_KEY%" -o StrictHostKeyChecking=no %SSH_USER%@%EC2_HOST% "sudo docker pull %DOCKER_IMAGE%:latest && sudo docker rm -f student-management || true && sudo docker run -d -p 5000:5000 --name student-management %DOCKER_IMAGE%:latest"
                     '''
