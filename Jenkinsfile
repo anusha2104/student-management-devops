@@ -37,9 +37,14 @@ pipeline {
 
         stage('Deploy to AWS EC2') {
             steps {
-                sshagent(['ec2-ssh-key']) {
+                withCredentials([sshUserPrivateKey(
+                    credentialsId: 'ec2-ssh-key',
+                    keyFileVariable: 'SSH_KEY',
+                    usernameVariable: 'SSH_USER'
+                )]) {
+
                     bat '''
-                        ssh -o StrictHostKeyChecking=no ubuntu@%EC2_HOST% "sudo docker pull %DOCKER_IMAGE%:latest && sudo docker rm -f student-management || true && sudo docker run -d -p 5000:5000 --name student-management %DOCKER_IMAGE%:latest"
+                        ssh -i "%SSH_KEY%" -o StrictHostKeyChecking=no %SSH_USER%@%EC2_HOST% "sudo docker pull %DOCKER_IMAGE%:latest && sudo docker rm -f student-management || true && sudo docker run -d -p 5000:5000 --name student-management %DOCKER_IMAGE%:latest"
                     '''
                 }
             }
