@@ -1,0 +1,51 @@
+
+services:
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: student_management
+      MYSQL_USER: student_user
+      MYSQL_PASSWORD: student_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "student_user",
+          "-pstudent_password"
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  backend:
+    image: anusha2105/student-management-backend:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    environment:
+      MYSQL_HOST: db
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: student_management
+      MYSQL_USER: student_user
+      MYSQL_PASSWORD: student_password
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    image: anusha2105/student-management-frontend:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:

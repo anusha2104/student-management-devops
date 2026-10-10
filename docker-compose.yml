@@ -1,0 +1,73 @@
+﻿services:
+
+  db:
+    image: mysql:8.0
+    container_name: student-management-db
+    restart: unless-stopped
+
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: student_management
+      MYSQL_USER: student_user
+      MYSQL_PASSWORD: student_password
+
+
+
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "student_user",
+          "-pstudent_password"
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+
+  backend:
+    build:
+      context: ./backend
+
+    container_name: student-management-backend
+    restart: unless-stopped
+
+    environment:
+      MYSQL_HOST: db
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: student_management
+      MYSQL_USER: student_user
+      MYSQL_PASSWORD: student_password
+
+    ports:
+      - "5001:5000"
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+
+  frontend:
+    build:
+      context: ./frontend
+
+    container_name: student-management-frontend
+    restart: unless-stopped
+
+    ports:
+      - "5173:80"
+
+    depends_on:
+      - backend
+
+
+volumes:
+  mysql_data:
