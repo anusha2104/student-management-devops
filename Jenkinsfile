@@ -35,7 +35,7 @@ pipeline {
                 docker run -d --name student-test-db-%BUILD_NUMBER% --network student-test-%BUILD_NUMBER% -e MYSQL_ROOT_PASSWORD=rootpassword -e MYSQL_DATABASE=student_management -e MYSQL_USER=student_user -e MYSQL_PASSWORD=student_password mysql:8.0
                 if errorlevel 1 exit /b 1
 
-                powershell -NoProfile -Command "$ready=$false; for($i=0; $i -lt 60; $i++){ docker exec student-test-db-%BUILD_NUMBER% mysql -u student_user -pstudent_password student_management -e 'SELECT 1' 2>$null | Out-Null; if($LASTEXITCODE -eq 0){$ready=$true; break}; Start-Sleep -Seconds 2 }; if(-not $ready){exit 1}"
+                powershell -NoProfile -Command "$ready=$false; for($i=1; $i -le 60; $i++){ Write-Host ('Waiting for MySQL: attempt ' + $i + '/60'); docker exec student-test-db-%BUILD_NUMBER% mysql -u student_user -pstudent_password student_management -e 'SELECT 1' 2>$null | Out-Null; if($LASTEXITCODE -eq 0){$ready=$true; Write-Host 'MySQL is ready'; break}; Start-Sleep -Seconds 2 }; if(-not $ready){ Write-Host 'MySQL did not become ready. Logs:'; docker logs student-test-db-%BUILD_NUMBER%; exit 1 }"
                 if errorlevel 1 exit /b 1
 
                 docker run --rm --network student-test-%BUILD_NUMBER% -e MYSQL_HOST=student-test-db-%BUILD_NUMBER% -e MYSQL_PORT=3306 -e MYSQL_DATABASE=student_management -e MYSQL_USER=student_user -e MYSQL_PASSWORD=student_password --entrypoint pytest %BACKEND_IMAGE%:%BUILD_NUMBER% -q
