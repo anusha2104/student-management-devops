@@ -12,7 +12,7 @@ pipeline {
     stages {
         stage('Validate Source') {
             steps {
-                bat 'python -m compileall -q backend'
+                bat 'docker run --rm -v "%CD%\\backend:/app" -w /app python:3.12-slim python -m compileall -q app.py models.py test_app.py'
                 bat 'docker compose -f docker-compose.yml config -q'
                 bat 'docker compose -f docker-compose.prod.yml config -q'
             }
