@@ -81,24 +81,6 @@ The production configuration is defined in `docker-compose.prod.yml`. It uses Do
 
 The EC2 security group must permit HTTP traffic on port 80 and SSH access for deployment. MySQL and the backend do not need public port mappings.
 
-## Project Structure
-
-```text
-.
-â”œâ”€â”€ backend/
-â”‚   â”œâ”€â”€ app.py
-â”‚   â”œâ”€â”€ models.py
-â”‚   â”œâ”€â”€ requirements.txt
-â”‚   â”œâ”€â”€ test_app.py
-â”‚   â””â”€â”€ Dockerfile
-â”œâ”€â”€ frontend/
-â”‚   â”œâ”€â”€ src/
-â”‚   â”œâ”€â”€ nginx.conf
-â”‚   â””â”€â”€ Dockerfile
-â”œâ”€â”€ docker-compose.yml
-â”œâ”€â”€ docker-compose.prod.yml
-â””â”€â”€ Jenkinsfile
-```
 
 ## Future Improvements
 
