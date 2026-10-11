@@ -343,9 +343,7 @@ function App() {
               Cloud-Based Student Management
             </p>
 
-            <p className="mt-1 text-[11px] leading-4 text-slate-400">
-              React Â· Flask Â· MySQL Â· Docker
-            </p>
+           
           </div>
         </div>
       </aside>
