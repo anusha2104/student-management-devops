@@ -63,7 +63,7 @@ export default function Dashboard({ students = [], onNavigate }) {
         <div className="mt-1 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-slate-900">
-              Student Dashboard
+              Dashboard
             </h1>
             <p className="mt-2 text-sm text-slate-500">
               Manage your student records from one place.
